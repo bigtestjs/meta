@@ -1,0 +1,13 @@
+{
+  "name": "@bigtest/meta",
+  "version": "0.0.1",
+  "description": "Shared scripts for BigTest packages",
+  "repository": "https://github.com/bigtestjs/meta",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "bigtest-docs": "./bin/docs",
+    "bigtest-release": "./bin/release",
+    "bigtest-tag-version": "./bin/tag-version"
+  }
+}
