@@ -9,5 +9,8 @@
     "bigtest-docs": "./bin/docs",
     "bigtest-release": "./bin/release",
     "bigtest-tag-version": "./bin/tag-version"
+  },
+  "dependencies": {
+    "jsdoc-api": "^4.0.3"
   }
 }
