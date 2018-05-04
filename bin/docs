@@ -24,14 +24,35 @@ function writeFile(filename, data) {
   fs.writeFileSync(filename, data);
 }
 
+function sortByClass(docs) {
+  let classes = docs.filter((d) => d.kind === 'class');
+  let byLongname = (a, b) => a.longname > b.longname ? 1 : -1;
+
+  let groupedByClass = classes.map((c) => {
+    return [c].concat(
+      docs.filter((d) => d.memberof == c.longname && d.kind === 'member').sort(byLongname),
+      docs.filter((d) => d.memberof == c.longname && d.kind !== 'member').sort(byLongname)
+    );
+  });
+
+  let ungrouped = docs.filter((d) => !d.memberof && d.kind === 'function').sort(byLongname);
+
+  let sorted = groupedByClass.concat(ungrouped).reduce((acc, val) => acc.concat(val), []);
+
+  return sorted;
+}
+
 function generateDocs() {
   let docs = jsdoc.explainSync({
-    files: path.join(cwd, `${input}/*.js`)
+    files: path.join(cwd, `${input}/**/*.js`),
+    configure: path.join(__dirname, '../jsdoc.config.json')
   }).filter((doc) => {
     // don't document undocumented docs...
     return !doc.undocumented &&
       // or private docs that don't belong to anything
-      (doc.access !== 'private' || !!doc.memberof);
+      (doc.access !== 'private' || !!doc.memberof) &&
+      // removes `package:undefined`
+      (doc.kind !== 'package');
   }).map((doc) => {
     // remove cwd from file paths
     if (doc.meta && doc.meta.path) {
@@ -40,6 +61,8 @@ function generateDocs() {
 
     return doc;
   });
+
+  docs = sortByClass(docs);
 
   writeFile(
     path.join(cwd, output),
