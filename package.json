@@ -11,6 +11,7 @@
     "bigtest-tag-version": "./bin/tag-version"
   },
   "dependencies": {
-    "jsdoc-api": "^4.0.3"
+    "jsdoc-api": "^4.0.3",
+    "jsdoc-escape-at": "^1.0.1"
   }
 }
